@@ -10,11 +10,15 @@ import (
 	"syscall"
 )
 
-const prefix = "!magma"
-
 func main() {
 	godotenv.Load()
+
 	token := os.Getenv("DISCORD_TOKEN")
+	prefix := os.Getenv("PREFIX")
+	if prefix == "" || prefix == "!" {
+		prefix = "!magma"
+	}
+
 	ses, err := discordgo.New("Bot " + token)
 	if err != nil {
 		panic(err)
@@ -39,6 +43,7 @@ func main() {
 		if len(args) >= 2 {
 			switch args[1] {
 			case "rules":
+
 				embed := &discordgo.MessageEmbed{
 					Title: "🌋 MagmaRealms - Rules",
 					Description: "" +
@@ -52,6 +57,7 @@ func main() {
 				}
 				s.ChannelMessageSendEmbed(os.Getenv("CHANEL_RULES_ID"), embed)
 				break
+
 			case "info":
 				embed := &discordgo.MessageEmbed{
 					Title: "🌋 MagmaRealms - Info",
@@ -137,12 +143,12 @@ func main() {
 			default:
 				s.ChannelMessageSend(r.ChannelID, "příkazy: \n"+
 					"```\n!magma rules (odešle pravidla do přednastaveného chanelu) [CHANEL_RULES_ID]"+
-					"\n!magma info (odešle informace do přednastaveného chanelu) [CHANEL_INFO_ID]"+
-					"\n!magma oznameni (odešle oznameni do přednastaveného chanelu) [CHANEL_OZNAMENI_ID]"+
-					"\n!magma oznameni-T (odešle oznameni do lokálního chanelu) [/]"+
-					"\n!magma changelog (odešle změny do přednastaveného chanelu) [CHANEL_CHANGELOG_ID]"+
-					"\n!magma changelog-T (odešle změny do lokálního chanelu) [/]"+
-					"\n!magma help (tento výpis) [/]```",
+					"\n"+prefix+" info (odešle informace do přednastaveného chanelu) [CHANEL_INFO_ID]"+
+					"\n"+prefix+" oznameni (odešle oznameni do přednastaveného chanelu) [CHANEL_OZNAMENI_ID]"+
+					"\n"+prefix+" oznameni-T (odešle oznameni do lokálního chanelu) [/]"+
+					"\n"+prefix+" changelog (odešle změny do přednastaveného chanelu) [CHANEL_CHANGELOG_ID]"+
+					"\n"+prefix+" changelog-T (odešle změny do lokálního chanelu) [/]"+
+					"\n"+prefix+" help (tento výpis) [/]```",
 				)
 			}
 		} else {
